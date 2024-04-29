@@ -28,22 +28,46 @@ have cmake version>3.5 installed before proceeding.**
 The below steps can help install the basic libs required to compile and link the OpenCV calls in Vitis Vision host code.
 
 1. create a directory "source" and clone [opencv-4.4.0](https://github.com/opencv/opencv/tree/4.4.0) into it.
+	```
+	git clone https://github.com/opencv/opencv --branch 4.4.0 source
+ 	```
 2. create a directory "source_contrib" and clone [opencv-4.4.0-contrib](https://github.com/opencv/opencv_contrib/tree/4.4.0) into it.
-3. create 2 more directories: *build* , *install*
-4. open a bash terminal and *cd* to *build* directory
-5. Run the command: *export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/*
-6. Run the command: *cmake -D CMAKE_BUILD_TYPE=RELEASE
-  -D CMAKE_INSTALL_PREFIX=< path-to-install-directory>
-  -D CMAKE_CXX_COMPILER=< path-to-Vitis-installation-directory>/tps/lnx64/gcc-6.2.0/bin/g++
-  -D OPENCV_EXTRA_MODULES_PATH=< path-to-source_contrib-directory>/modules/
-  -D WITH_V4L=ON -DBUILD_TESTS=OFF -DBUILD_ZLIB=ON
-  -DBUILD_JPEG=ON -DWITH_JPEG=ON -DWITH_PNG=ON
-  -DBUILD_EXAMPLES=OFF -DINSTALL_C_EXAMPLES=OFF
-  -DINSTALL_PYTHON_EXAMPLES=OFF -DWITH_OPENEXR=OFF
-  -DBUILD_OPENEXR=OFF <path-to-source-directory>*
-7. Run the command: *make all -j8*
-8. Run the command: *make install*
-
+	```
+	git clone https://github.com/opencv/opencv_contrib --branch 4.4.0 source_contrib
+ 	```
+3. cd into 'source', and create 'build' dir and cd into it.
+	```
+ 	cd source
+	mkdir build
+	cd build
+ 	```  
+4. Run the command:
+	```
+	export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LIBRARY_PATH
+ 	```
+5. Create an *install* directory any where on the disk.
+	```
+	mkdir install
+	```
+6. Set up the Vitis tools via the settings64 sh script in the *install* directory.
+7. Run the command (Note: you have to replace the directory paths in the command with their appropriate location):
+	```
+	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=<path to the install directory> -D WITH_V4L=ON -D OPENCV_EXTRA_MODULES_PATH=<path to opencv directory>/source_contrib/modules -DBUILD_TESTS=OFF -DBUILD_ZLIB=ON -DBUILD_JPEG=ON -DWITH_JPEG=ON -DWITH_PNG=ON -DBUILD_EXAMPLES=OFF -DINSTALL_C_EXAMPLES=OFF -DINSTALL_PYTHON_EXAMPLES=OFF -DWITH_OPENEXR=OFF -DBUILD_OPENEXR=OFF -D CMAKE_CXX_COMPILER=$XILINX_HLS/tps/lnx64/gcc-6.2.0/bin/g++ ..
+	```
+8. Run the command:
+	```
+ 	make all -j8
+ 	```
+9. Run the command:
+ 	```
+ 	make install
+ 	```
+10. Set the following for your project/example design runs:
+	```
+   	export OPENCV_INCLUDE=<output path to installed opencv>/include/opencv4
+   	export OPENCV_LIB=<output path to installed opencv>/lib
+   	export LD_LIBRARY_PATH=<output path to installed opencv>/lib:$LD_LIBRARY_PATH*
+ 	```   
 The OpenCV includes and libs will be in the *install* directory
 
 ## Source files organization
